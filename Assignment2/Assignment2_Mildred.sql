@@ -29,15 +29,15 @@ bookno integer REFERENCES Book(bookno)
 --Tables have been populated using data.sql file
 
 --Question 1
-SELECT DISTINCT b.bookno, b.title 
-FROM Book b, Buys bu 
-WHERE b.bookno = bu.bookno AND bu.sid IN ((SELECT m.sid 
-                                           FROM Major m 
-                                           WHERE m.major = 'CS') 
-                                          INTERSECT 
-                                          (SELECT m.sid 
-                                           FROM Major m 
-                                           WHERE m.major = 'Math')) 
+SELECT DISTINCT b.bookno, b.title
+FROM Book b, Buys bu
+WHERE b.bookno = bu.bookno AND bu.sid IN ((SELECT m.sid
+                                           FROM Major m
+                                           WHERE m.major = 'CS')
+                                          INTERSECT
+                                          (SELECT m.sid
+                                           FROM Major m
+                                           WHERE m.major = 'Math'))
 AND b.price BETWEEN 10 AND 40;
 
 --Question 2

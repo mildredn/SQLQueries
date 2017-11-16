@@ -1,6 +1,6 @@
---Question 1 
-    
-create database adc_mildrednoronha;
+--Question 1
+
+CREATE DATABASE adc_mildrednoronha;
 
 DROP TABLE Sailor;
 DROP TABLE Boat;
@@ -16,7 +16,7 @@ Age integer
 INSERT INTO Sailor VALUES (22, 'Dustin', 7 , 45);
 INSERT INTO Sailor VALUES (29, 'Brutus', 1 , 33);
 INSERT INTO Sailor VALUES (31, 'Lubber', 8, 55);
-INSERT INTO Sailor VALUES (32, 'Andy', 8, 25);
+INSERT INTO Sailor VALUES (32, 'ANDy', 8, 25);
 INSERT INTO Sailor VALUES (58, 'Rusty', 10, 35);
 INSERT INTO Sailor VALUES (64, 'Horatio', 7, 35);
 INSERT INTO Sailor VALUES (71, 'Zorba', 10, 16);
@@ -25,7 +25,7 @@ INSERT INTO Sailor VALUES (85, 'Art', 3, 25);
 INSERT INTO Sailor VALUES (95, 'Bob', 3, 63);
 
     --Query to view Sailor relation with all its rows
-Select * from Sailor;
+SELECT * FROM Sailor;
 
 CREATE TABLE Boat(
 Bid integer primary key not null,
@@ -39,7 +39,7 @@ INSERT INTO Boat VALUES (103, 'Clipper', 'green');
 INSERT INTO Boat VALUES (104, 'Marine', 'red');
 
     --Query to view Boat relation with all its rows
-Select * from Boat;
+SELECT * FROM Boat;
 
 CREATE TABLE Reserves(
 Sid integer REFERENCES Sailor(Sid),
@@ -58,11 +58,11 @@ INSERT INTO Reserves VALUES (64, 102, 'Monday');
 INSERT INTO Reserves VALUES (74, 103, 'Tuesday');
 
     --Query to view Reserves relation with all its rows
-Select * from Reserves;
+SELECT * FROM Reserves;
 
 /*#Question 2
 
-#Trying the following query on the above relations to test the insertion of new values into the Reserves relation which references primary keys from Boat and Sailor relations respectively
+#Trying the following query on the above relations to test the insertion of new values into the Reserves relation which references primary keys FROM Boat AND Sailor relations respectively
 
 # INSERT INTO Reserves VALUES (30, 110, 'Sunday');
 
@@ -73,78 +73,119 @@ Select * from Reserves;
 
 #Reserves relation cannot accept values which do not exist as primary keys in the tables it references.
 
-#Trying to delete a value from Boat that is referenced in Reserves will give an error.
+#Trying to delete a value FROM Boat that is referenced in Reserves will give an error.
 
-# DELETE from Boat where Bid = 104;
+# DELETE FROM Boat WHERE Bid = 104;
 
 #Result obtained ---
 
 # ERROR:  update or delete on table "boat" violates foreign key constraint "reserves_bid_fkey" on table "reserves"
-# DETAIL:  Key (bid)=(104) is still referenced from table "reserves".
+# DETAIL:  Key (bid)=(104) is still referenced FROM table "reserves".
 
-#In the above queries we see that since the values we tried to alter/update were still being referenced in the Reserves relation as foreign keys, these actions were forbidden. This may be to prevent accidental deletions and to provide data integrity among relations referencing each other.
+#In the above queries we see that since the values we tried to alter/update were still being referenced in the Reserves relation as foreign keys, these actions were forbidden. This may be to prevent accidental deletions AND to provide data integrity among relations referencing each other.
 
 #Trying to delete a value in Sailor relation not referenced by any other relation
 
-# DELETE from Sailor where Sid = 95;
+# DELETE FROM Sailor WHERE Sid = 95;
 
 #Result obtained ---
 
 # DELETE 1
 
-#This shows that even though sid is a foreign key in Reserves relation, the deletion of this value was possible because it was not referenced anywhere else. This ensures that deleting this value from Sailor relation does not mess with other relations.
+#This shows that even though sid is a foreign key in Reserves relation, the deletion of this value was possible because it was not referenced anyWHERE else. This ensures that deleting this value FROM Sailor relation does not mess with other relations.
 
-#Trying to delete from Sailor when that value is being referenced in Reserves relation
+#Trying to delete FROM Sailor when that value is being referenced in Reserves relation
 
-# DELETE from Sailor where Sid = 74;
+# DELETE FROM Sailor WHERE Sid = 74;
 
 #Result obtained ---
 
 # ERROR:  update or delete on table "sailor" violates foreign key constraint "reserves_sid_fkey" on table "reserves"
-# DETAIL:  Key (sid)=(74) is still referenced from table "reserves".
+# DETAIL:  Key (sid)=(74) is still referenced FROM table "reserves".
 
-#Again we see that this query violates the foreign key refernce constraint on Reserves. Sid = 74 is also present in Reserves and hence, cannot be deleted.*/
+#Again we see that this query violates the foreign key refernce constraint on Reserves. Sid = 74 is also present in Reserves AND hence, cannot be deleted.*/
 
 --#Question 3
 
 --#(a)
 
-SELECT sname, sid, rating from Sailor;
+SELECT sname, sid, rating
+FROM Sailor;
 
 --#(b)
 
-SELECT bname from Boat where color = 'red';
+SELECT bname
+FROM Boat
+WHERE color = 'red';
 
 --#(c)
 
-SELECT bname, color from Boat;
+SELECT bname, color
+FROM Boat;
 
 --#(d)
 
-SELECT s.sname from Sailor as s, Reserves as r, Boat as b where s.sid = r.sid AND b.bid = r.bid AND b.color = 'red';
+SELECT s.sname
+FROM Sailor as s, Reserves as r, Boat as b
+WHERE s.sid = r.sid
+  AND b.bid = r.bid
+  AND b.color = 'red';
 
 --#(e)
 
-SELECT b.bname from Sailor as s, Reserves as r, Boat as b where s.age> 25 AND s.sid = r.sid AND b.bid = r.bid;
+SELECT b.bname
+FROM Sailor as s, Reserves as r, Boat as b
+WHERE s.age> 25
+  AND s.sid = r.sid
+  AND b.bid = r.bid;
 
 --#(f)
 
-SELECT s.sname, b.color from Sailor as s, Reserves as r, Boat as b where s.sid = r.sid AND b.bid = r.bid AND NOT (b.color = 'green' OR b.color = 'red');
+SELECT s.sname, b.color
+FROM Sailor as s, Reserves as r, Boat as b
+WHERE s.sid = r.sid
+  AND b.bid = r.bid
+  AND NOT (b.color = 'green'
+            OR b.color = 'red');
 
 --#(g)
 
-SELECT b1.bname from Reserves as r1, Boat as b1 where r1.bid = b1.bid AND b1.color = 'blue' 
-UNION 
-SELECT b2.bname from Reserves as r2, Boat as b2 where r2.bid = b2.bid AND b2.color = 'green';
+SELECT b.bname
+FROM Boat b, Reserves r
+WHERE b.bid = r.bid
+  AND r.sid in ((SELECT r1.sid
+                FROM Reserves r1, Boat b1
+                WHERE b1.bid = r1.bid
+                AND b1.color = 'blue')
+                INTERSECT
+                (SELECT r1.sid
+                FROM Reserves r1, Boat b1
+                WHERE b1.bid = r1.bid
+                AND b1.color = 'green'));
 
 --#(h)
 
-SELECT b.bname from Boat as b where b.bid NOT IN (Select b1.bid from Boat as b1 , Reserves as r1 where b1.bid = r1.bid);
+(SELECT b.bid
+  FROM Boat b)
+EXCEPT
+(SELECT r.bid
+  FROM Reserves r);
 
 --#(i)
 
-SELECT b.bname from Boat b where b.bid in (select b1.bid from Boat b1, Reserves r1 where b1.bid = r1.bid group by b1.bid having count(r1.sid)>=2);
+SELECT b.bname
+FROM Boat b
+WHERE b.bid in (SELECT b1.bid
+                FROM Reserves r1, Reserves r2
+                WHERE r1.bid = r2.bid
+                AND r1.sid <> r2.sid);
 
 --#(j)
 
-SELECT r.sid from Sailor s, Reserves r where r.sid = s.sid group by r.sid having count(r.bid) = 1;
+(SELECT r.sid
+  FROM Reserves)
+EXCEPT
+(SELECT r1.sid
+  FROM Reserves r1, Reserves r2
+  WHERE r1.bid = r2.bid
+  AND r1.sid <> r2.sid));
